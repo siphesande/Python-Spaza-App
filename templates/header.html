@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Python Programming</title>
+    <meta name="viewport" content = "width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+<!-- <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"> -->
+
+<!-- Optional theme -->
+
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Nelisa's Cash Store</a>
+    </div>
+    <div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/">Home</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="/">Products 
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href ="/products"> Products List</a></a></li>
+            <li><a href ="/products/mostPopulerPrd"> Most Popular Product</a></a></li>
+            <li><a href ="/products/leastPopulerPrd"> Least Popular Product </a></a></li> 
+          </ul>
+        </li>
+       
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="/">Categories
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href ="/categories"> Categories list </a></a></li>
+            <li><a href ="/categories/mostPopulerCat"> Most Popular Catagory </a></a></li>
+            <li><a href ="/categories/leastPopulerCat">Least Popular Category </a></a></li> 
+          </ul>
+        </li>
+
+       <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="/">Sales 
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href ="/Sales"> Sales list </a></a></li>
+           
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="/">Purchases 
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href ="/purchases"> Purchases </a></a></li>
+           
+          </ul>
+        </li>
+
+
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="/">Suppliers 
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href ="/suppliers"> Suppliers </a></a></li>
+           
+          </ul>
+        </li>
+
+       <ul class="nav navbar-nav navbar-right">
+        <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="/login/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      </ul>
+
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+<!-- specific page content below -->
+    {% with messages = get_flashed_messages() %}
+		 {% if messages %}
+			{% for message in messages %}
+              <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+              {{massage}}
+           </div>
+           {% endfor %}
+       {% endif %}
+       {% endwith %}
+	{% block body %}{% endblock %}
+    
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type ="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+<div class ="well">
+  
+
+
+<a href="/" class ="btn btn-primary"><span class="glyphicon glyphicon-home"></span> Back to home</a>
+
+
+</div>  
+</body> 
+</html> 
