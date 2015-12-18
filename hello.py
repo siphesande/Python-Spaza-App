@@ -1,10 +1,12 @@
 from flask import Flask, render_template, flash, request, url_for, redirect,session
 from wtforms import Form
+
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from dbconnect import connection
 from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
 import gc
+import os
 
 
 app = Flask(__name__)
@@ -21,10 +23,36 @@ def dashboard():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html")
-@app.route('/login/', methods = ['GET','POST'])
-def login_page():
+
+@app.route('/login/', methods=['GET','POST'])
+def login():
+    try:
+        c,conn = connection()
+        
+        error = None
+        if request.method == 'POST':
+
+            data = c.execute("SELECT * FROM users WHERE username = (%s)",
+                    thwart(request.form['username']))
+            data = c.fetchone()[2]
+
+            if sha256_crypt.verify(request.form['password'], data):
+                session['logged_in'] = True
+                session['username'] = request.form['username']
+                #flash('You are now logged in.'+str(session['username']))
+                return redirect(url_for('dashboard'))
+
+            else:
+                error = 'Invalid credentials. Try again'
+        gc.collect()
+        return render_template('login.html', error=error)
+    except Exception, e:
+        error = 'Invalid credentials. Try again'
+        return render_template('login.html', error=error)
+# @app.route('/login/', methods = ['GET','POST'])
+# def login_page():
     
-    return render_template("login.html")
+#     return render_template("login.html")
 
 
 @app.route('/logout/')
@@ -34,6 +62,8 @@ def logout():
 	flash('You have been logged out.')
 	gc.collect()
 	return redirect(url_for('main'))
+# set the secret key.  keep this really secret:
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 
 class RegistrationForm(Form):
@@ -57,7 +87,7 @@ def register_page():
     try:
         form = RegistrationForm(request.form)
         if request.method == 'POST' and form.validate():
-            #flash("register attempted")
+            flash("register attempted")
 
             username = form.username.data
             email = form.email.data
@@ -84,7 +114,7 @@ def register_page():
                 session['username'] = username
                 return redirect(url_for('intro_to_py'))
         gc.collect()
-        #flash("hi there.")
+        flash("hi there.")
         return render_template('register.html', form=form)
     except Exception as e:
         return(str(e))
