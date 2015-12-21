@@ -4,6 +4,7 @@ from wtforms import Form
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from dbconnect import connection
 from passlib.hash import sha256_crypt
+from functools import wraps
 from MySQLdb import escape_string as thwart
 import gc
 import os
@@ -36,10 +37,11 @@ def login():
                     thwart(request.form['username']))
             data = c.fetchone()[2]
 
+
             if sha256_crypt.verify(request.form['password'], data):
                 session['logged_in'] = True
                 session['username'] = request.form['username']
-                #flash('You are now logged in.'+str(session['username']))
+                flash('You are now logged in.'+str(session['username']))
                 return redirect(url_for('dashboard'))
 
             else:
@@ -55,13 +57,26 @@ def login():
 #     return render_template("login.html")
 
 
+# login required decorator
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('You need to login first.')
+            return redirect(url_for('login'))
+    return wrap
+
+
 @app.route('/logout/')
+@login_required
 def logout():
 	session.pop('logged_in', None)
 	session.clear()
 	flash('You have been logged out.')
 	gc.collect()
-	return redirect(url_for('main'))
+	return redirect(url_for('homepage'))
 # set the secret key.  keep this really secret:
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
@@ -82,7 +97,7 @@ class RegistrationForm(Form):
 # 	confirm = PasswordField("Repeat Password")
 # 	accept_tos = BooleanField("I accept the <a href='/about/tos/'>Terms of Service and the <a href = '/privacy/'>Privacy Notice </a> (Last updated Dec 2015)",[validators.Required])
 @app.route('/register/', methods=['GET', 'POST'])
-def register_page():
+def register():
 
     try:
         form = RegistrationForm(request.form)
@@ -112,7 +127,7 @@ def register_page():
                 gc.collect()
                 session['logged_in'] = True
                 session['username'] = username
-                return redirect(url_for('intro_to_py'))
+                return redirect(url_for('dashboard'))
         gc.collect()
         flash("hi there.")
         return render_template('register.html', form=form)
