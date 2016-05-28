@@ -89,13 +89,7 @@ class RegistrationForm(Form):
     confirm = PasswordField('Repeat Password')
     accept_tos = BooleanField('I accept the <a href="/about/tos" target="blank">Terms of Service</a> and <a href="/about/privacy-policy" target="blank">Privacy Notice</a> (updated Jan 22, 2015)', [validators.Required()])
 
-# class RegistratiopnForm(Form):
-# 	username = TextField("Username", [validators.Length(min =4, max =20)])
-# 	email = TextField("Email Address", [validators.Length(min = 6, max= 50)])
-# 	password = PasswordField("Password", [validators.Required(),
-# 		                                  validators.EqualTo("confirm", message = "Passwords Must macth." )])
-# 	confirm = PasswordField("Repeat Password")
-# 	accept_tos = BooleanField("I accept the <a href='/about/tos/'>Terms of Service and the <a href = '/privacy/'>Privacy Notice </a> (Last updated Dec 2015)",[validators.Required])
+
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
 
@@ -135,51 +129,6 @@ def register():
         return(str(e))
 
 
-# @app.route('/register/', methods=['GET', 'POST'])
-# def register_page():
-# 	try:
-# 		form = RegistrationForm(request.form)
-# 		if request.method == "POST" and form.validate():
-# 			username = form.username.date
-# 			email =form.email.data
-# 			password = sha256_crypt.encrypt(((str(form.password.date))))
-#             c, conn = connection() 
-
-#             x = c.execute("SELECT * FROM users WHERE username = (%s)",
-#             	(thwart(username)))
-#             if int(x) > 0:
-#             	flash("That username is already taken, please choose another")
-#             	return render_template('register.html', form-form)
-
-#             else:
-#             	c.execute("INSERT INTO users (username,password,email, tracking) VALUES (%s, %s, %s, %s),
-#                        (thwart(username),thwart(password),thwart(email),thwart("/introduction-to-python-programming/"))
-#                 conn.commit()
-#                 flash("Thanks for registering!")
-#                 c.close()
-#                 conn.close()
-
-#                 gc.collect()
-
-#                 session['logged_in'] = True
-#                 session['username'] = username
-
-#                 return redirect(url_for("dashboard"))
-
-# return render_template("register.html", form=form)
-
-
-# 	except Exception as e:
-# 		return(str(e))
-
-    
-
-# @app.route("/slashboard")
-# def slashboard():
-# 	try:
-# 	    return render_template("dashboard.html")
-#     except Exception as e:
-#         return render_template("500.html",error = e)
 
     
 
